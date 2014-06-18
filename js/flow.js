@@ -1,4 +1,4 @@
-// Shim starts //
+// RequestAnimationFrame shim starts //
  
 (function() {
     var lastTime = 0;
@@ -25,7 +25,7 @@
         };
 }());
 
-// Shim ends //
+// RequestAnimationFrame shim ends //
 
 //Start drawing the canvas
 var canvas = document.getElementById('canvas');		
@@ -55,7 +55,9 @@ function init(){
 		else {
 			cancelAnimationFrame(requestID);
 			document.getElementById('canvas').className += " white";
+			document.getElementById('instruct').className = "appear col span_2_of_3 item";
 			sound();
+
 		}
 		
 	  }
@@ -134,10 +136,25 @@ function loadSound(context, url) {
 				soundSource.connect(context.destination);
 				soundSource.start(0);
 				setTimeout(function(){
-					console.log("Pretty Neat, huh?")
+					document.getElementById('canvas').className += " fade";
+					document.getElementById('instruct').className += " fade";
+					rollcredits();
+					
 				},274000);
 
-				renderFrame(); 
+				renderFrame();
+				canvas.addEventListener('click', function(){
+					//stop song
+					soundSource.disconnect(0);
+					//fade canvas and instructions
+					document.getElementById('canvas').className += " fade";
+					document.getElementById('instruct').className += " fade";
+					//roll credits
+					rollcredits();
+					}, false);
+					
+					
+ 
 			},
 			//catch errors 
 			function(e) {
@@ -149,6 +166,8 @@ function loadSound(context, url) {
 	request.send();
 };
 
+
+
 function trigger(ev){
 	ev.preventDefault();
 	document.getElementById('intro').className += " fade";
@@ -159,12 +178,31 @@ function trigger(ev){
 	}, 50);
 }
 
+function rollcredits() {
+	setTimeout(function(){
+		console.log("Roll Credits, bitch!")
+		var container = document.getElementById("container");
+		var intro = document.getElementById("intro");
+		var canvas = document.getElementById("canvas");
+		var instruct = document.getElementById("instruct");
+		
+		//remove existing elements
+		container.removeChild(intro);
+		container.removeChild(canvas);
+		container.removeChild(instruct);
+
+		//add in an element:
+		document.getElementById('credits').className = "appear col span_2_of_3 item";
+	}, 1500);
+	
+}
 
 
 //Application starts on user click:
 window.addEventListener('click', trigger, false);
 
-//Fire event when song ends
+
+
 
 		
 	
